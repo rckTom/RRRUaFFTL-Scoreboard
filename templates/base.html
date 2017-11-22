@@ -1,0 +1,142 @@
+{% load static from staticfiles %}
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" type="image/png" href="{% static 'media/icon.png' %}">
+
+    <title>RRRUaFTTL Dashboard</title>
+
+    {% block loadFirst %}
+    {% endblock %}
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+
+    <!-- Custom styles for this template -->
+    <link href="{% static 'css/dashboard.css' %}" rel="stylesheet">
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+    <script type="text/javascript" charset="utf8" src="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js"></script>
+    
+  </head>
+
+  <body>
+    <header>
+      <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <a class="navbar-brand" href="/">RRRUaFTTL</a>
+        <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Settings</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Profile</a>
+            </li>
+            {% if request.user.is_staff %}
+            <li class="nav-item">
+              <a class="nav-link" href='/admin'>Administration</a>
+            </li>
+            {% endif %}
+            <li class="nav-item">
+              <a class="nav-link" href="#">Help</a>
+            </li>
+          </ul>
+          <ul class="navbar-nav mr-auto d-lg-none d-md-none d-xl-none">
+            <li class="nav-item">
+              <a class="nav-link {% if request.resolver_match.url_name == "ranking" %}active{% endif %}" href="/ranking">Ranking <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {% if request.resolver_match.url_name == "points_overview" %}active{% endif %}" href="/points_overview">Points</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {% if request.resolver_match.url_name == "statistics" %}active{% endif %}" href="/statistics">Statistics</a>
+            </li>
+            <!-- <li class="nav-item">
+              <a class="nav-link {% if request.resolver_match.url_name == "awards" %}active{% endif %}" href="/awards">Awards</a>
+            </li> -->
+          </ul>
+
+          {% if user.is_authenticated %}
+          <ul class="navbar-nav mr-auto d-lg-none d-md-none d-xl-none">
+            <li class="nav-item">
+              <a class="nav-link {% if request.resolver_match.url_name == "challenge" %}active{% endif %}" href="/challenge">Challenge someone</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {% if request.resolver_match.url_name == "add_challenge_result" %}active{% endif %}" href="/add_challenge_result">Report a game</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {% if request.resolver_match.url_name == "my_challenges" %}active{% endif %}" href="/my_challenges">My Challenges</a>
+            </li>
+          </ul>
+          {% endif %}
+
+          <ul class="navbar-nav navbar-right">
+            {% if user.is_authenticated %}
+              <li class="nav-item"><a class = "nav-link" href="/logout">Logout</a></li>
+            {% else %}
+              <li class="nav-item"><a class = "nav-link" href="/login">Login</a></li>
+            {% endif %}
+          </ul>
+        </div>
+      </nav>
+    </header>
+
+    <div class="container-fluid">
+      <div class="row">
+        <nav class="col-0 col-sm-0 col-md-2 d-none d-xs-none d-sm-none d-md-block bg-light sidebar">
+          <ul class="nav nav-pills flex-column">
+            <li class="nav-item">
+              <a class="nav-link {% if request.resolver_match.url_name == "ranking" %}active{% endif %}" href="/ranking">Ranking <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {% if request.resolver_match.url_name == "points_overview" %}active{% endif %}" href="/points_overview">Points</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {% if request.resolver_match.url_name == "statistics" %}active{% endif %}" href="/statistics">Statistics</a>
+            </li>
+            <!-- <li class="nav-item">
+              <a class="nav-link {% if request.resolver_match.url_name == "awards" %}active{% endif %}" href="/awards">Awards</a>
+            </li> -->
+            <li class="nav-item">
+              <a class="nav-link {% if request.resolver_match.url_name == "all_games" %}active{% endif %}" href="/all_games">All challenges</a>
+            </li>
+          </ul>
+
+          {% if user.is_authenticated %}
+          <ul class="nav nav-pills flex-column">
+            <li class="nav-item">
+              <a class="nav-link {% if request.resolver_match.url_name == "challenge" %}active{% endif %}" href="/challenge">Challenge someone</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {% if request.resolver_match.url_name == "add_challenge_result" %}active{% endif %}" href="/add_challenge_result">Report a game</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {% if request.resolver_match.url_name == "my_challenges" %}active{% endif %}" href="/my_challenges">My Challenges</a>
+            </li>
+          </ul>
+          {% endif %}
+        </nav>
+
+        <main role="main" class="col-12 col-sm-12 ml-sm-auto col-md-10 pt-3">
+          {% block content %}
+          {% endblock %}
+        </main>
+      </div>
+    </div>
+  </body>
+</html>

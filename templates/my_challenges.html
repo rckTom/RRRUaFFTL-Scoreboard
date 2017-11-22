@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<script type="text/javascript" src="https://cdn.datatables.net/r/bs-3.3.5/jqc-1.11.3,dt-1.10.8/datatables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+<link href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+
+<div class="row">
+    <div class="col-12">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Your challenges as contender</h4>
+            <div class="table-responsive">
+            <table class='table' id = 'challenges_contender'>
+                <thead>
+                    <tr>
+                        <td>Challengee</td>
+                        <td>Challenge date </td>
+                        <td>Expiration date </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for challenge in challengesContender %}
+                        <tr>
+                            <td> {{challenge.challengee}}
+                            <td> {{challenge.challenge_date}}
+                            <td> {{challenge.expiration_date}}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            </div>
+        </div>  
+        </div>  
+    </div>
+        <div class="col-12 py-2">
+        <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Your challenges as challengee</h4>
+            <div class="table-responsive">
+            <table class='table' id = 'challenges_challengee'>
+                <thead>
+                    <tr>
+                        <td>Contender</td>
+                        <td>Challenge date </td>
+                        <td>Expiration date </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for challenge in challengesChallengee %}
+                        <tr>
+                            <td> {{challenge.contender}}
+                            <td> {{challenge.challenge_date}}
+                            <td> {{challenge.expiration_date}}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            </div>
+        </div>    
+    </div>
+    </div>
+</div>
+
+<script type="text/javascript" charset="utf-8">
+     $(document).ready(function() { 
+          $('#challenges_contender').DataTable();
+          $('#challenges_challengee').DataTable();  
+     } );
+</script>
+
+{% endblock %}

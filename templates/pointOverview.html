@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<script
+			  src="https://code.jquery.com/color/jquery.color-2.1.2.min.js"
+			  integrity="sha256-H28SdxWrZ387Ldn0qogCzFiUDDxfPiNIyJX7BECQkDE="
+			  crossorigin="anonymous"></script>
+
+
+<div class="table-responsive">
+    <table class="table table-bordered" id="table">
+    {% for row in table %}
+        <tr {% if row.0 == request.user.username %}class="table-active"{% endif %}>
+        {% for cell in row %}
+            {% if forloop.first or forloop.parentloop.first %}
+                <th> 
+            {% else %} <td class="text-center"> {% endif %}
+                {{ cell }}
+            {% if forloop.first or forloop.parentloop.first %}
+                </th>
+            {% else %}
+                 </td> 
+            {% endif %}
+        {% endfor %}
+        </tr>
+    {% endfor %}
+</table>
+</div>
+
+
+
+<script type="text/javascript">
+$(document).ready(function() { 
+        var cells = document.getElementById("table").getElementsByTagName("td");
+        for (var i = 0; i < cells.length; i++) {
+            value = parseFloat(cells[i].innerHTML);
+            if(isNaN(value))
+            {
+                cells[i].style.backgroundColor = 'DarkGray';
+            } else
+            {
+                console.log(value);
+                console.log(jQuery.Color({ hue: 120, saturation: 50, lightness: 50, alpha: 1}).toRgbaString());
+                cells[i].style.backgroundColor = jQuery.Color({ hue: 120, saturation: 0.5, lightness: 1-value/4, alpha: 1}).toRgbaString() ;
+            }
+        }
+        });
+</script>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static from staticfiles %}
+
+
+{% block content %}
+    <link href="{% static '/css/signin.css' %}" rel="stylesheet">
+    <div class="container">
+      
+      <form class="form-signin" action="/login/" method="POST">
+        {% csrf_token %}
+        <h2 class="form-signin-heading">Please sign in</h2>
+        <label for="inputEmail" class="sr-only">Username</label>
+        {{ form.username }}
+        <label for="inputPassword" class="sr-only">Password</label>
+        {{ form.password }}
+        {% if form.errors %}
+              <div class="alert alert-danger" role="alert">
+       Password or username incorrect. Please try again
+      </div>
+      {% endif %}
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+      </form>
+
+    </div>
+{% endblock %}

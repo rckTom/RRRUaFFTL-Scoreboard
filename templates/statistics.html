@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js"></script>
+   
+<div class="row">
+
+    <div class="col-sm-12 col-md-12 col-lg-6 py-2">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Daily activity</h4>
+                {{ chart_daily.as_html }}
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-12 col-lg-6 py-2">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Weekly activity</h4>
+                {{ chart_weekly.as_html }}
+            </div>
+        </div>
+    </div>
+    {% if user.is_authenticated %}
+    <div class="col-sm-12 col-md-12 col-lg-6 py-2">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">User Point History</h4>
+                {{ chart_userHistory.as_html }}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    <div class="col-sm-12 col-md-6 py-2">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Game stats</h4>
+                <ul class="list-group">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">Games played <span class="badge badge-primary badge-pill">{{game_stats.games_count}}</span></li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">Open challenges <span class="badge badge-primary badge-pill">{{game_stats.open_games_count}}</span></li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">Closed challenges <span class="badge badge-primary badge-pill">{{game_stats.closed_games_count}}</span></li>
+
+                    {% if user.is_authenticated %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">Your game count<span class="badge badge-primary badge-pill">{{game_stats.user_played_games}}</span></li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">Your lost games<span class="badge badge-primary badge-pill">{{game_stats.user_lost_games}}</span></li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">Your won games<span class="badge badge-primary badge-pill">{{game_stats.user_won_games}}</span></li>
+                    {% endif %}
+                </ul> 
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Challenge a teammate</h1>
+    <form method="POST" class="form-horizontal">
+        <div class="form-group">
+            {% csrf_token %}
+            {% for field in form %}
+                <label class="control-label" for="{{ field.name }}">{{ field.label }}</label>
+                {{ field }}
+            {% endfor %}
+        </div>
+        <button type="submit" class="btn btn-default">Challenge</button>
+    </form>
+{% endblock %}
