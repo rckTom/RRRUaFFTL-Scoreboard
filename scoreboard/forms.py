@@ -1,7 +1,7 @@
 from django import forms
 from django.db.models import Q
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from . import models
 from datetime import datetime, timedelta
 
@@ -12,10 +12,15 @@ class LoginForm(AuthenticationForm):
     password = forms.CharField(label="Password", max_length=30, 
                                widget=forms.PasswordInput(attrs={'class': 'form-control', 'name': 'password', 'placeholder':"Password"}))
 
+class MyPasswordChangeForm(PasswordChangeForm):
+    old_password = forms.CharField(label="Old Password", widget = forms.PasswordInput(attrs={'class':'form-control','name':'old_password'}))
+    new_password1 = forms.CharField(label='New Passowrd', widget = forms.PasswordInput(attrs={'class':'form-control','name':'new_password1'}))
+    new_password2 = forms.CharField(label='Repeat new password', widget = forms.PasswordInput(attrs={'class':'form-control','name':'new_password2'}))
+    
 class ChallengeResultForm(forms.Form):
     def __init__(self,user, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['challenge'] = forms.ModelChoiceField(models.Challenge.objects.all().filter(contender = user, challenge_open = True, game_reported=False))
+        self.fields['challenge'] = forms.ModelChoiceField(models.Challenge.objects.filter(contender = user, challenge_open = True, game_reported=False))
         self.fields['contender_score'] = forms.IntegerField()
         self.fields['challengee_score'] = forms.IntegerField()
         self.fields['game_date'] = forms.DateTimeField()
@@ -40,7 +45,8 @@ class AddChallengeForm(forms.Form):
     def __init__(self,user,*args,**kwargs):
         super().__init__(*args,**kwargs)
         self.user = user
-        activeChallenges = models.Challenge.objects.all().filter(Q(contender = self.user) & Q(challenge_open = True))
+        activeChallenges = models.Challenge.objects.filter(Q(contender = self.user) & Q(challenge_open = True))
+        
         exludedUsers = []
         for challenge in activeChallenges:
             exludedUsers.append(challenge.challengee)
@@ -49,11 +55,18 @@ class AddChallengeForm(forms.Form):
         exludedUsers.append(self.user)
         exludedUsers = list(set(exludedUsers))
 
-        qs = models.Profile.objects.all().filter(activePlayer = True)
-        for user in exludedUsers:
-            qs = qs.exclude(user = user)
+        for player in models.Profile.objects.filter(activePlayer = True).exclude(user__in = exludedUsers):
+            activeChallengesCount = models.Challenge.objects.filter(Q(challengee = player.user) & Q(challenge_open=True)).count()
+            if activeChallengesCount >= 3:
+                exludedUsers.append(player.user)
 
-        self.fields['challengee'] = forms.ModelChoiceField(qs)
+        qs = models.Profile.objects.filter(activePlayer = True).exclude(user__in = exludedUsers)
+
+        activePlayer = models.Profile.objects.get(user=self.user)
+        if activePlayer.activePlayer == True:
+            self.fields['challengee'] = forms.ModelChoiceField(qs)
+        else:
+            self.fields['challengee'] = forms.ModelChoiceField(models.Profile.objects.none())
         self.fields['challengee'].widget.attrs = {'class':'form-control'}
 
     def save(self):
@@ -64,3 +77,24 @@ class AddChallengeForm(forms.Form):
         challenge.challengee = self.cleaned_data['challengee'].user
         challenge.game_reported = False
         challenge.save()
+
+class ProfileChangeForm(forms.Form):
+    def __init__(self,profile,*args,**kwargs):
+        super().__init__(*args,**kwargs)
+        self.profile = profile
+        self.fields['email'] = forms.EmailField(initial = profile.user.email)
+        self.fields['username'] = forms.CharField(initial = profile.user.username)
+        self.fields['activePlayer'] = forms.BooleanField(initial = profile.activePlayer,required=False)
+        
+        for fieldname, value  in self.fields.items():
+            value.widget.attrs = {'class':'form-control col-sm-10'}
+
+        self.fields['email'].widget.attrs = {'class':'form-control col-sm-10 {% if form.errors %}is-invalid{% endif %}'}
+        self.fields['activePlayer'].widget.attrs = {'class':'form-check-input col-sm-10'}
+
+    def save(self):
+        self.profile.user.username = self.cleaned_data['username']
+        self.profile.activePlayer = self.cleaned_data['activePlayer']
+        self.profile.user.email = self.cleaned_data['email']
+        self.profile.user.save()
+        self.profile.save()

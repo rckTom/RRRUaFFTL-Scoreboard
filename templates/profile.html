@@ -1,1 +1,32 @@
-<div class="card"
+{% extends 'base.html'%}
+
+{% block content %}
+<div class="row p-2">
+	<div class="card col-12">
+		<div class="card-block">
+			<h4 class="card-title">User information</h4>
+			<form method="Post">
+				{% csrf_token %}
+				<div class="form-group row">
+					<label class="col-sm-2 col-form-label" for={{form.email.name}}>E-Mail</label>
+					<input id="id_email" type="email" name="email" value="{{ form.email.value }}" class="form-control col-10 {% if form.errors %}is-invalid{% endif %}">
+
+					{% if form.errors %}
+						<div class="invalid-feedback">As active player you have to provide an email address</div>
+					{% endif %}
+				</div>
+				<div class="form-group row {% if form.username.errors %}has-error{% endif %}">
+					<label class="col-sm-2 col-form-label" for={{form.username.name}}>Username</label>
+					{{form.username}}
+				</div>
+				<div class="form-check row{% if form.activePlayer.errors %}has-error{% endif %}">
+					<label class="col-sm-2 col-form-label form-check-label">{{form.activePlayer}} Active</label>
+				</div>
+				<div class="form group">
+					<button type="submit" class="btn btn-default">Submit</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+{% endblock %}

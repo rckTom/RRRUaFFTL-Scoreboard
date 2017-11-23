@@ -2,7 +2,7 @@ from django.db.models import Q
 from . import models
 
 def get_Ranking():
-    players = models.Profile.objects.all().order_by('-points')
+    players = models.Profile.objects.filter(activePlayer=True).order_by('-points')
     ranking = []
     rank = 1
     for i in range(0,len(players)):
@@ -19,7 +19,7 @@ def get_Ranking():
 def getPointsAgainst(user,against,endDate=None):       
     # the last 3 games by the user against user2
     if endDate is not None:
-        games = models.Challenge.objects.all().filter(Q(challenge_open = False) &
+        games = models.Challenge.objects.filter(Q(challenge_open = False) &
                                                  (Q(contender = user) | Q(challengee = user)) &
                                                  (Q(contender = against) | Q(challengee = against)) &
                                                  Q(game_date__lte = endDate)).order_by('-game_date')[:3]
@@ -31,11 +31,11 @@ def getPointsAgainst(user,against,endDate=None):
     count = games.count()
 
     if count == 3:
-        return gamePoints(user,games[0]) + 0.67*gamePoints(user,games[1]) + 0.33*gamePoints(user,games[2])
+        return 3*gamePoints(user,games[0]) + 2*gamePoints(user,games[1]) + gamePoints(user,games[2])
     elif count == 2:
-        return gamePoints(user,games[0]) + 0.67*gamePoints(user,games[1])
+        return 3*gamePoints(user,games[0]) + 2*gamePoints(user,games[1])
     elif count == 1:
-        return gamePoints(user,games[0])
+        return 3*gamePoints(user,games[0])
     return 0
 
 def updatePoints():

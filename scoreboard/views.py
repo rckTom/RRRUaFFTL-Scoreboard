@@ -1,6 +1,7 @@
 from django.http import *
 from django.db.models import Q
 from django.shortcuts import render
+from django.views.decorators.cache import never_cache
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.template.loader import  render_to_string
@@ -16,22 +17,43 @@ from . import ranking as rank
 from . import statistics as stat
 import datetime
 
-
+@never_cache
 def index(request):
     return render(request, 'index.html', {})
 
+@never_cache
 def thanks(request):
     return render(request, 'thanks.html')
 
+@login_required
+@never_cache
+def profile(request):
+    profile = models.Profile.objects.get(user=request.user)
+
+    if request.method == 'POST':
+        form = forms.ProfileChangeForm(profile,request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/')
+        else:
+            return render(request,'profile.html',{'form':form})
+    else:
+        print("create empty form")
+        form = forms.ProfileChangeForm(profile)
+        return render(request,'profile.html',{'form':form})
+
+@never_cache
 def ranking(request):
     rank.updatePoints()
     ranking = rank.get_Ranking()
     return render(request, 'ranking.html',{'ranking':ranking})
 
+@never_cache
 def all_games(request):
     games = models.Challenge.objects.all()
     return render(request,'all_games.html',{'challenges':games})
 
+@never_cache
 def points_overview(request):
     users = models.Profile.objects.filter(activePlayer=True).order_by('user')
     usernames = []
@@ -58,6 +80,7 @@ def awards(request):
     x = [1,2,3,4,5,5,6,7,8,9,9]
     return render(request, 'awards.html', {'awards':x})
 
+@never_cache
 def statistics(request):
     class ActivityGraph(Chart):
         chart_type = 'line'
@@ -149,6 +172,7 @@ def statistics(request):
     return render(request, 'statistics.html', {'chart_daily':ActivityGraph(request.user),'chart_weekly':WeeklyActivityGraph(request.user),'chart_userHistory':UserPointHistory(request.user),'game_stats':gameStats})
 
 @login_required
+@never_cache
 def challenge(request):
     current_user = request.user
     if current_user.is_authenticated():
@@ -156,7 +180,7 @@ def challenge(request):
             form = forms.AddChallengeForm(current_user,request.POST)
             if form.is_valid():
                 if form.cleaned_data['challengee'].user.email is not None:
-                    message = mail.EmailMessage(subject = current_user.username + ' has challenged you',body = 'Test', to=[form.cleaned_data['challengee'].user.email])
+                    message = mail.EmailMessage(subject = current_user.username + ' has challenged you',body = render_to_string('challenge_mail.html',{'contender':current_user.username}), to=[form.cleaned_data['challengee'].user.email])
                     message.content_subtype = "html"
                     message.send()
                 form.save()
@@ -166,6 +190,7 @@ def challenge(request):
         return render(request, 'add_challenge.html',{'form':form})
 
 @login_required
+@never_cache
 def add_challenge_result(request):
     current_user = request.user
     openChallenges = models.Challenge.objects.filter(contender = current_user, challenge_open = True, game_reported=False)
@@ -183,7 +208,7 @@ def add_challenge_result(request):
                 newEntry.expiration_date = newEntry.report_date+datetime.timedelta(days=10)
                 message = mail.EmailMessage(subject="Game result",
                                             body=render_to_string('report_mail.html',
-                                                                 {'contender': 'Contender','token':newEntry.token}),
+                                                {'contender': request.user.username,'contender_score':form.cleaned_data['contender_score'],'challengee_score':form.cleaned_data['challengee_score'],'token':newEntry.token}),
                                             to=[newEntry.game.challengee.email])
                 message.content_subtype = "html"
                 message.send()
@@ -196,6 +221,7 @@ def add_challenge_result(request):
         return render(request, 'add_challenge_result.html',{'form':form})
 
 @login_required
+@never_cache
 def my_challenges(request):
     activeUser = request.user
     openChallenges_contender = models.Challenge.objects.filter(Q(contender = activeUser) & Q(challenge_open = True))

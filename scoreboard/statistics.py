@@ -80,7 +80,7 @@ def gameStats(user = None):
     stats['closed_games_count'] = models.Challenge.objects.filter(challenge_open=False).count()
     if user.is_authenticated():
         stats['user_played_games'] = models.Challenge.objects.filter(Q(challenge_open=False) & (Q(contender=user) | Q(challengee = user))).count()
-        stats['user_lost_games'] = (models.Challenge.objects.filter(Q(challenge_open=False) & Q(contender=user) & Q(contender_score__lt=F('contender_score'))).count() +
+        stats['user_lost_games'] = (models.Challenge.objects.filter(Q(challenge_open=False) & Q(contender=user) & Q(contender_score__lt=F('challengee_score'))).count() +
                                     models.Challenge.objects.filter(Q(challenge_open=False) & Q(challengee=user) & Q(challengee_score__lt=F('contender_score'))).count())
         stats['user_won_games'] = stats['user_played_games'] -  stats['user_lost_games']
     return stats

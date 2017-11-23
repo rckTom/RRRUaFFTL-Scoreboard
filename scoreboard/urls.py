@@ -13,5 +13,6 @@ urlpatterns = [
     url(r'^statistics',views.statistics, name='statistics'),
     url(r'^awards',views.awards, name = 'awards'),
     url(r'^all_games',views.all_games,name='all_games'),
-    url(r'^report_confirmation',views.ReportConfirmation.as_view(),name='report_confirmation')
-]
+    url(r'^report_confirmation',views.ReportConfirmation.as_view(),name='report_confirmation'),
+    url(r'^profile',views.profile,name="profile")
+    ]

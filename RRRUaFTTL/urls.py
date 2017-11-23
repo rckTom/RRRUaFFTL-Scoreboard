@@ -16,12 +16,13 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from django.contrib.auth import views
-from scoreboard.forms import LoginForm
+from scoreboard.forms import LoginForm, MyPasswordChangeForm
 
 urlpatterns = [
     url(r'^', include('scoreboard.urls')),
     url(r'^scoreboard/', include('scoreboard.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^login/',views.login ,{'template_name': 'login.html','authentication_form':LoginForm}),
-    url(r'^logout/',views.logout,{'next_page': '/'})
-]
+    url(r'^logout/',views.logout,{'next_page': '/'}),
+    url(r'^change_password/',views.password_change,{'template_name': 'change_password.html','password_change_form':MyPasswordChangeForm,'post_change_redirect':'/'}),
+    url(r'^password_change_done/',views.password_change_done,{'template_name':'thanks.html'})]
