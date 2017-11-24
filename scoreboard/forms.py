@@ -45,7 +45,7 @@ class AddChallengeForm(forms.Form):
     def __init__(self,user,*args,**kwargs):
         super().__init__(*args,**kwargs)
         self.user = user
-        activeChallenges = models.Challenge.objects.filter(Q(contender = self.user) & Q(challenge_open = True))
+        activeChallenges = models.Challenge.objects.filter((Q(contender = self.user) |  Q(challengee=self.user)) & Q(challenge_open = True))
         
         exludedUsers = []
         for challenge in activeChallenges:
@@ -53,7 +53,6 @@ class AddChallengeForm(forms.Form):
             exludedUsers.append(challenge.contender)
 
         exludedUsers.append(self.user)
-        exludedUsers = list(set(exludedUsers))
 
         for player in models.Profile.objects.filter(activePlayer = True).exclude(user__in = exludedUsers):
             activeChallengesCount = models.Challenge.objects.filter(Q(challengee = player.user) & Q(challenge_open=True)).count()

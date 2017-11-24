@@ -23,11 +23,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'gf0ihw$wamgdey^yk@6)*g07ydlx(s1gia%)$c1l2dm0n=0)qt'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 
 ALLOWED_HOSTS = ['rfhmab543']
 
+LOGIN_URL = '/login'
 LOGIN_REDIRECT_URL = '/'
 # Application definition
 

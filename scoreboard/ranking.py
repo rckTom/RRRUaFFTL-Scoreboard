@@ -1,5 +1,7 @@
 from django.db.models import Q
 from . import models
+from operator import itemgetter
+
 
 def get_Ranking():
     players = models.Profile.objects.filter(activePlayer=True).order_by('-points')
@@ -15,7 +17,23 @@ def get_Ranking():
             ranking[i]['rank'] = ranking[i-1]['rank'] + 1
     return ranking
 
+def everlasting_Ranking():
+    players = models.Profile.objects.filter(activePlayer=True)
+    ranking = []
+    for player in players:
+        points = models.Challenge.objects.filter((Q(contender=user) | Q(challengee = user)) & Q(challenge_open=False)).count()
+        ranking.append({'rank':0,'player':player.user.username,'points':points})
+    #sort by points
+    ranking = sorted(ranking,key=itemgetter('points'),reverse = True)
+    ranking[0]['rank'] = 1
+    for i in range(1,len(ranking)):
+        if ranking[i-1]['points'] == ranking[i]['points']:
+            ranking[i]['rank'] = ranking[i-1]['rank']
+        else:
+            ranking[i]['rank'] = ranking[i-1]['rank'] + 1
 
+    return ranking
+    
 def getPointsAgainst(user,against,endDate=None):       
     # the last 3 games by the user against user2
     if endDate is not None:
