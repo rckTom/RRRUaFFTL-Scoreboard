@@ -31,6 +31,21 @@ class ChallengeResultForm(forms.Form):
         self.fields['game_date'].widget.attrs = {'class':'form-control','id':'game_date'}
         self.fields['game_date'].input_formats = ['%d.%m.%Y %H:%M']
 
+    def clean(self):
+        contender_score = self.cleaned_data.get('contender_score')
+        challengee_score = self.cleaned_data.get('challengee_score')
+
+        if contender_score is not None and challengee_score is not None:
+            if contender_score == 3:
+                valid = challengee_score <=2 and challengee_score >=0
+            elif challengee_score == 3:
+                valid = contender_score <=2 and challengee_score >=0
+            else:
+                valid = False
+                
+            if not valid:
+                raise forms.ValidationError("Game result is not possible")
+
     def save(self,challenge_open=True):
         challenge = self.cleaned_data['challenge']
         challenge.contender_score = self.cleaned_data['contender_score']
