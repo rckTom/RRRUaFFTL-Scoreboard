@@ -26,7 +26,7 @@ SECRET_KEY = 'gf0ihw$wamgdey^yk@6)*g07ydlx(s1gia%)$c1l2dm0n=0)qt'
 DEBUG = False
 
 
-ALLOWED_HOSTS = ['rfhmab543']
+ALLOWED_HOSTS = ['rfhmab543','localhost']
 
 LOGIN_URL = '/login'
 LOGIN_REDIRECT_URL = '/'
@@ -107,9 +107,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
-LANGUAGE_CODE = 'de-DE'
+LANGUAGE_CODE = 'en-US'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Berlin'
 
 USE_I18N = True
 
