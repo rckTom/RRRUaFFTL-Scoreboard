@@ -72,7 +72,7 @@ def points_overview(request):
             if user == user2:
                 points.append({'text':'clear'})
             else:
-                points.append({'text':rank.getPointsAgainst(user.user,user2.user),'gameStatus':rank.getRankingWonGames(user,user2)})
+                points.append({'text':rank.getPointsAgainst(user.user,user2.user),'gameStatus':rank.getRankingWonGames(user.user,user2.user)})
         table.append(points)
     return render(request, 'pointOverview.html', {'users': usernames,'table':table})
 

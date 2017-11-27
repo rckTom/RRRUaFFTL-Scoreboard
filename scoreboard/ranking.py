@@ -94,16 +94,14 @@ def gamePoints(user,challenge):
     return 0
 
 def getRankingWonGames(user,user2):
-    wonGames = dict()
     games = models.Challenge.objects.all().filter(Q(challenge_open = False) &
                                                  (Q(contender = user) | Q(challengee = user)) &
-                                                 (Q(contender = against) | Q(challengee = against))).order_by('-game_date')[:3]
+                                                 (Q(contender = user2) | Q(challengee = user2))).order_by('-game_date')[:3]
     count = games.count()
     if count == 3:
-        wonGames = [gamePoints(user,games[0]),gamePoints(user,games[1]),gamePoints(user,games[2])]
+        return( [gamePoints(user,games[0]),gamePoints(user,games[1]),gamePoints(user,games[2])])
     elif count == 2:
-        wonGames = [gamePoints(user,games[0]),gamePoints(user,games[1]),-1]
+        return( [gamePoints(user,games[0]),gamePoints(user,games[1]),-1])
     elif count == 1:
-        wonGames = [gamePoints(user,games[0]),-1,-1]
-
+        return( [gamePoints(user,games[0]),-1,-1])
 

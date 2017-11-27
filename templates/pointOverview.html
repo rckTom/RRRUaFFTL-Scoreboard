@@ -31,7 +31,7 @@
         {% if forloop.first %}
             <tr>
             {% for cell in row %}
-                <th colspan="3"> {{ cell  }} </th>
+                <th colspan="3"> {{ cell.text }} </th>
             {% endfor %}
             </tr>
         {% else %}
@@ -45,7 +45,7 @@
                     <td colspan="3" class="text-center"> {{cell.text}} </td>
                 {% endif %}
             {% endfor %}
-            <tr>
+            </tr>
             <tr>
             {% for cell in row %}
                 {% if foorloop.first %}
@@ -54,7 +54,7 @@
                     {% for game in cell.gameStatus %}
                         <td>
                         {% if game == 1 %}
-                            <span style="color:green" class="octicon octicon-check"></span>
+				<span class="octicon octicon-check"></span>
                         {% elif game == 0 %}
                             <span style="color:red" class="octicon octicon-x"></span>
                         {% else %}
@@ -62,7 +62,7 @@
                         {% endif %}
                         </td>
                     {% endfor %}
-                {% endif}
+                {% endif %}
             {% endfor %}
             </tr>
         {% endif %}
