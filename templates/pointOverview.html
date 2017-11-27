@@ -37,6 +37,7 @@
                     <th colspan="3"> {{cell.text}} </th>
                 {% elif forloop.first %}
                     <th colspan="3"> {{cell.text}} </th> 
+                {% elif cell.text == 'clear' %}
                 {% else %}
                     {% for game in cell.gameStatus %}
                         <td>
