@@ -104,4 +104,6 @@ def getRankingWonGames(user,user2):
         return( [gamePoints(user,games[0]),gamePoints(user,games[1]),-1])
     elif count == 1:
         return( [gamePoints(user,games[0]),-1,-1])
+    elif count == 0:
+        return( [-1,-1,-1])
 
