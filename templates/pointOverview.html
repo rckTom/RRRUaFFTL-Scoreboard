@@ -12,7 +12,7 @@
 <div class="table-responsive">
     <table class="table table-bordered" id="table">
     {% for row in table %}
-        <tr {% if row.0 == request.user.username %}class="table-active"{% endif %}>
+        <tr>
         {% for cell in row %}
             {% if forloop.first or forloop.parentloop.first %}
                 <th> 
