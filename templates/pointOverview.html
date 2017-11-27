@@ -11,7 +11,7 @@
 
 <div class="table-responsive">
     <table class="table table-bordered" id="table">
-    <!-- {% for row in table %}
+     {% for row in table %}
         <tr>
         {% for cell in row %}
             {% if forloop.first or forloop.parentloop.first %}
@@ -25,50 +25,35 @@
             {% endif %}
         {% endfor %}
         </tr>
-    {% endfor %} -->
-
-    {% for row in table %}
-        {% if forloop.first %}
+    {% endfor %} 
+</table>
+</div>
+<div class="table-responsive">
+    <table class="table table-bordered" id = "table2">
+        {% for row in table %}
             <tr>
             {% for cell in row %}
-                <th colspan="3"> {{ cell.text }} </th>
-            {% endfor %}
-            </tr>
-        {% else %}
-            <tr>
-            {% for cell in row %}
-                {% if forloop.first %}
-                    <th colspan="3" rowspan="2"> {{ cell.text }} </th>
-                {% elif cell.text == 'clear' %}
-                    <td colspan="3" rowspan="2"> </td>
-                {% else %}
-                    <td colspan="3" class="text-center"> {{cell.text}} </td>
-                {% endif %}
-            {% endfor %}
-            </tr>
-            <tr>
-            {% for cell in row %}
-                {% if foorloop.first %}
-                {% elif cell.text == 'clear' %}
+                {% if forloop.parentloop.first %}
+                    <th colspan="3"> {{cell.text}} </th>
+                {% elif forloop.first %}
+                    <th colspan="3"> {{cell.text}} </th> 
                 {% else %}
                     {% for game in cell.gameStatus %}
                         <td>
                         {% if game == 1 %}
-				<span class="octicon octicon-check"></span>
+				            <span style="color:green" class="octicon octicon-check"></span>
                         {% elif game == 0 %}
                             <span style="color:red" class="octicon octicon-x"></span>
                         {% else %}
-                            <span style="display:none" class="octicon octicon-x"></span>
+                            <span style="color:grey" class="octicon octicon-circle-slash"></span>
                         {% endif %}
                         </td>
                     {% endfor %}
                 {% endif %}
             {% endfor %}
             </tr>
-        {% endif %}
-    {% endfor %}
-
-</table>
+        {% endfor %}
+    </table>
 </div>
 
 
