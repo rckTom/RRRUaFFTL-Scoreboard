@@ -17,7 +17,7 @@
             {% if forloop.first or forloop.parentloop.first %}
                 <th> 
             {% else %} <td class="text-center"> {% endif %}
-                {{ cell }}
+                {{ cell.text }}
             {% if forloop.first or forloop.parentloop.first %}
                 </th>
             {% else %}
@@ -67,7 +67,8 @@ $(document).ready(function() {
             if(isNaN(value))
             {
                 cells[i].style.backgroundColor = 'DarkGray';
-            } else
+                cells[i].innerHTML = ""
+            }else
             {
                 console.log(value);
                 console.log(jQuery.Color({ hue: 120, saturation: 50, lightness: 50, alpha: 1}).toRgbaString());
