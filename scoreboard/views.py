@@ -59,20 +59,20 @@ def points_overview(request):
     usernames = []
     table = []
     for user in users:
-        usernames.append(user.user.username)
+        usernames.append({'text':user.user.username})
     header = []
-    header.append('')
+    header.append({'text':''})
     header.extend(usernames)
     table.append(header)
     print(table)
     for user in users:
         points = []
-        points.append(user.user.username)
+        points.append({'text':user.user.username})
         for user2 in users:
             if user == user2:
-                points.append("")
+                points.append({'text':'clear'})
             else:
-                points.append(rank.getPointsAgainst(user.user,user2.user))
+                points.append({'text':rank.getPointsAgainst(user.user,user2.user),'gameStatus':rank.getRankingWonGames(user,user2)})
         table.append(points)
     return render(request, 'pointOverview.html', {'users': usernames,'table':table})
 

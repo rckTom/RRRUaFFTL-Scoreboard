@@ -7,11 +7,11 @@
 			  src="https://code.jquery.com/color/jquery.color-2.1.2.min.js"
 			  integrity="sha256-H28SdxWrZ387Ldn0qogCzFiUDDxfPiNIyJX7BECQkDE="
 			  crossorigin="anonymous"></script>
-
+<link href="https://cdnjs.cloudflare.com/ajax/libs/octicons/4.4.0/font/octicons.css" rel="stylesheet">
 
 <div class="table-responsive">
     <table class="table table-bordered" id="table">
-    {% for row in table %}
+    <!-- {% for row in table %}
         <tr>
         {% for cell in row %}
             {% if forloop.first or forloop.parentloop.first %}
@@ -25,7 +25,49 @@
             {% endif %}
         {% endfor %}
         </tr>
+    {% endfor %} -->
+
+    {% for row in table %}
+        {% if forloop.first %}
+            <tr>
+            {% for cell in row %}
+                <th colspan="3"> {{ cell  }} </th>
+            {% endfor %}
+            </tr>
+        {% else %}
+            <tr>
+            {% for cell in row %}
+                {% if forloop.first %}
+                    <th colspan="3" rowspan="2"> {{ cell.text }} </th>
+                {% elif cell.text == 'clear' %}
+                    <td colspan="3" rowspan="2"> </td>
+                {% else %}
+                    <td colspan="3" class="text-center"> {{cell.text}} </td>
+                {% endif %}
+            {% endfor %}
+            <tr>
+            <tr>
+            {% for cell in row %}
+                {% if foorloop.first %}
+                {% elif cell.text == 'clear' %}
+                {% else %}
+                    {% for game in cell.gameStatus %}
+                        <td>
+                        {% if game == 1 %}
+                            <span style="color:green" class="octicon octicon-check"></span>
+                        {% elif game == 0 %}
+                            <span style="color:red" class="octicon octicon-x"></span>
+                        {% else %}
+                            <span style="display:none" class="octicon octicon-x"></span>
+                        {% endif %}
+                        </td>
+                    {% endfor %}
+                {% endif}
+            {% endfor %}
+            </tr>
+        {% endif %}
     {% endfor %}
+
 </table>
 </div>
 
