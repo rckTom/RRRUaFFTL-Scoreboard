@@ -26,7 +26,7 @@ class Challenge(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     activePlayer = models.BooleanField(default = True)
-    points = models.FloatField(default = 0.0)
+    points = models.IntegerField(default = 0)
     trend = models.IntegerField(default = 0)
 
     def __str__(self):
