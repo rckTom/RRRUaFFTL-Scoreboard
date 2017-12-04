@@ -88,7 +88,7 @@ def statistics(request):
             super().__init__()
             self.user = user
             (self.x,self.y) = stat.daily_activity()
-            if(self.user.is_authenticated:
+            if(self.user.is_authenticated):
                 (self.userx,self.usery) = stat.daily_user_activity(self.user)
 
         def get_labels(self, **kwargs):
@@ -105,7 +105,7 @@ def statistics(request):
                 label='Activity of all users',
                 type='line',
                 data=self.y))
-            if self.user.is_authenticated
+            if self.user.is_authenticated:
                 datasets.append(DataSet(
                     color=(150,150,580),
                     label='Your activity',
@@ -119,7 +119,7 @@ def statistics(request):
             super().__init__()
             self.user = user
             (self.x,self.y) = stat.activity()
-            if(self.user.is_authenticated:
+            if self.user.is_authenticated:
                 (self.userx,self.usery) = stat.user_activity(self.user)
 
         def get_labels(self, **kwargs):
@@ -136,7 +136,7 @@ def statistics(request):
                 label='Activity of all users',
                 type='line',
                 data=self.y))
-            if self.user.is_authenticated
+            if self.user.is_authenticated:
                 datasets.append(DataSet(
                     label='Your activity',
                     type='line',
@@ -175,7 +175,7 @@ def statistics(request):
 @never_cache
 def challenge(request):
     current_user = request.user
-    if current_user.is_authenticated
+    if current_user.is_authenticated:
         if request.method == 'POST':
             form = forms.AddChallengeForm(current_user,request.POST)
             if form.is_valid():
@@ -195,7 +195,7 @@ def add_challenge_result(request):
     current_user = request.user
     openChallenges = models.Challenge.objects.filter(contender = current_user, challenge_open = True, game_reported=False)
     print(openChallenges)
-    if current_user.is_authenticated
+    if current_user.is_authenticated:
         if request.method == 'POST':
             form = forms.ChallengeResultForm(current_user,request.POST)
             if form.is_valid():
